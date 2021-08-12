@@ -110,14 +110,83 @@ def merge(left, right):
 	return array
 
 ################## QUICK SORT ##################
+def quick_sort(array, pivot=False):
+	"""
+	Inputs:
+	array (type : list):	list of numbers
+	pivot (type : int):		array index about whose value in the array to partition 
+
+	Outputs:
+	sortedArray (type : list): 	list of numbers sorted in ascending order
+	"""
+
+	print(array)
+
+	if len(array) == 1:
+		return array 
+	elif len(array) == 2:
+		if array[0] > array[1]:
+			print("Final sorted array: {0}".format([array[1], array[0]]))
+			return [array[1], array[0]]
+		print("Final sorted array: {0}".format([array[1], array[0]]))
+		return array
+
+	if not pivot:
+		pivot = len(array)//2
+
+	tmp = array[0]
+	pivotElement = array[pivot]
+	array[0] = pivotElement
+	array[pivot] = tmp
+
+	low = 1
+	high = len(array) - 1
+
+	print(array)
+	print("Low: {1}, High: {0}\n".format(array[high], array[low]))
+
+	while low <= high and low < len(array) and high > 0:
+		if array[low] > pivotElement and array[high] < pivotElement:
+			print("Low: {1}, High: {0} => Swap\n".format(array[high], array[low]))
+			tmp = array[low]
+			array[low] = array[high]
+			array[high] = tmp
+
+		if array[low] <= pivotElement:
+			low += 1
+
+		if array[high] >= pivotElement:
+			high -= 1
+
+		print(array)
+		try:
+			print("Low: {1}, High: {0}\n".format(array[high], array[low]))
+		except IndexError:
+			print("Low: {1}, High: {0}\n".format(array[high], "Out of range"))
+
+	array[0] = array[high]
+	array[high] = pivotElement
+	print(array)
+
+	if high == 0:
+		high = 1
+
+	left = quick_sort(array[0 : high])
+	right = quick_sort(array[high : len(array)])
+
+	sortedArray = left + right
+	print("Final sorted array: {0}".format(sortedArray))
+
+	return sortedArray
 
 
 if __name__ == "__main__":
-	array = [6.67, 3, 43.5, -77.7, -0.8, 5.4, 5.55, 121.9, 7]
+	# array = [6.67, 3, 43.5, -77.7, -0.8, 5.4, 5.55, 121.9, 7]
 	# array = list(range(11,-3,-1))
-	# array = [2, 1, 4, 3, 5]
+	array = [2, 1, 4, 3, 5]
 
 	# bubble_sort(array)
 	# selection_sort(array)
 	# merge_sort(array)
+	quick_sort(array)
 	
