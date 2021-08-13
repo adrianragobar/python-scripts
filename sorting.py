@@ -179,14 +179,80 @@ def quick_sort(array, pivot=False):
 
 	return sortedArray
 
+################## HEAP SORT ##################
+class Node:
+	def __init__(self, value):
+		self.value = value
+		self.left = None
+		self.right = None
+
+class Heap:
+    def __init__(self):
+        self.root = None
+        self.size = 0
+
+    def add(self, value):
+        if self.root is None:
+            self.root = Node(value)
+        else:
+            newNode = Node(value)
+
+            node = self.root
+            while True:
+            	if node.left is None:
+            		node.left = newNode
+            		break
+            	elif node.right is None:
+            		node.right = newNode
+            		break
+            	else:
+            		node = node.left
+        print("{0} added to heap".format(value))
+        self.size += 1
+
+    def height(self):
+    	count = self.size
+    	height = 0
+
+    	while count >= 0:
+    		count -= 2**height 
+    		height += 1
+
+    	return height
+
+    def toArray(self):
+    	## TODO
+
+def heap_sort(array):
+	"""
+	Inputs:
+	array (type : list):	list of numbers
+
+	Outputs:
+	array (type : list): 	list of numbers sorted in ascending order
+	"""
+
+	height = heap_height(array)
+
+	## TODO
 
 if __name__ == "__main__":
 	# array = [6.67, 3, 43.5, -77.7, -0.8, 5.4, 5.55, 121.9, 7]
 	# array = list(range(11,-3,-1))
-	array = [2, 1, 4, 3, 5]
+	# array = [2, 1, 4, 3, 5]
+	# array = list(range(-5,19))
+	array = [0,1,2,6,4,5]
 
 	# bubble_sort(array)
 	# selection_sort(array)
 	# merge_sort(array)
-	quick_sort(array)
+	# quick_sort(array)
+	
+	heap = Heap()
+	for value in array:
+		heap.add(value)
+
+	print(heap)
+
+	# heap_sort(array)
 	
