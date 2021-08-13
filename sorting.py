@@ -1,3 +1,5 @@
+from math import ceil
+
 ################## BUBBLE SORT ##################
 def bubble_sort(array):
 	"""
@@ -180,48 +182,72 @@ def quick_sort(array, pivot=False):
 	return sortedArray
 
 ################## HEAP SORT ##################
-class Node:
-	def __init__(self, value):
-		self.value = value
-		self.left = None
-		self.right = None
+def heap_height(array):
+	"""
+	Inputs:
+	array (type : list):	list of numbers
 
-class Heap:
-    def __init__(self):
-        self.root = None
-        self.size = 0
+	Outputs:
+	height (type : int): 	height of heap
+	"""
+	count = self.size
+	height = 0
 
-    def add(self, value):
-        if self.root is None:
-            self.root = Node(value)
-        else:
-            newNode = Node(value)
+	while count >= 0:
+		count -= 2**height 
+		height += 1
 
-            node = self.root
-            while True:
-            	if node.left is None:
-            		node.left = newNode
-            		break
-            	elif node.right is None:
-            		node.right = newNode
-            		break
-            	else:
-            		node = node.left
-        print("{0} added to heap".format(value))
-        self.size += 1
+	return height
 
-    def height(self):
-    	count = self.size
-    	height = 0
+def percolate(array, j):
+	"""
+	Inputs:
+	array (type : list):	list of numbers
+	j (type : int):			index of element to be percolated in heap
 
-    	while count >= 0:
-    		count -= 2**height 
-    		height += 1
+	Outputs:
+	array (type : list): 	list of numbers with percolated element
+	"""
 
-    	return height
+	while 2*j+1 < len(array):
+		print("\tIndex " + str(j))
+		# Internal nodes will have left child
+		leftDiff = array[j] - array[2*j+1]
+		try:
+			rightDiff = array[j] - array[2*j+2]
+		except IndexError:
+			rightDiff = None
 
-    def toArray(self):
-    	## TODO
+		if (rightDiff is None or leftDiff >= rightDiff) and leftDiff > 0:
+			tmp = array[2*j+1] 
+			array[2*j+1] = array[j]
+			array[j] = tmp 
+			j = 2*j + 1
+		elif not rightDiff:
+			break
+		elif rightDiff > 0 and rightDiff > leftDiff:
+			tmp = array[2*j+2] 
+			array[2*j+2] = array[j]
+			array[j] = tmp
+			j = 2*j + 2
+		else:
+			break
+		print(array)
+	return array
+
+def remove_root(array):
+	"""
+	Inputs:
+	array (type : list):		list of numbers
+
+	Outputs:
+	array (type : list): 		list of numbers with root removed and replaced by last element
+	root (type : <number>):		number at initial root
+	"""
+	root = array[0]
+	array[0] = array[-1]
+	del array[-1]
+	return array, root
 
 def heap_sort(array):
 	"""
@@ -229,15 +255,33 @@ def heap_sort(array):
 	array (type : list):	list of numbers
 
 	Outputs:
-	array (type : list): 	list of numbers sorted in ascending order
+	sortedArray (type : list): 	list of numbers sorted in ascending order
 	"""
 
-	height = heap_height(array)
+	if len(array) == 1:
+		return array 
+	
+	sortedArray = []
+	for i in range(len(array)-1, -1, -1):
+		# Conditions for internal nodes
+		if i != 0 and 2*i + 1 < len(array):
+			j = i
+			print("\nPercolating Element at Index {0}...".format(i))
+			array = percolate(array, j)
 
-	## TODO
+	while array:
+		print("\nPercolating Element at Root...")
+		array = percolate(array, 0)
+		array, root = remove_root(array)
+		print("New array: {0}".format(array))
+		sortedArray.append(root)
+
+	print("Final sorted array: {0}".format(sortedArray))
+	return sortedArray	
+
 
 if __name__ == "__main__":
-	# array = [6.67, 3, 43.5, -77.7, -0.8, 5.4, 5.55, 121.9, 7]
+	# array = [6.67, 3, 43.5, -77.7, -0.8, 5.4, 5.55, 121.9, 7, 1, 0, 3]
 	# array = list(range(11,-3,-1))
 	# array = [2, 1, 4, 3, 5]
 	# array = list(range(-5,19))
@@ -247,12 +291,5 @@ if __name__ == "__main__":
 	# selection_sort(array)
 	# merge_sort(array)
 	# quick_sort(array)
-	
-	heap = Heap()
-	for value in array:
-		heap.add(value)
-
-	print(heap)
-
-	# heap_sort(array)
+	heap_sort(array)
 	
